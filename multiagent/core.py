@@ -7,6 +7,8 @@ class EntityState(object):
         self.p_pos = None
         # physical velocity
         self.p_vel = None
+        # dingdian
+        self.points=None
 
 # state of agents (including communication and internal/mental state)
 class AgentState(EntityState):

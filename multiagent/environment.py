@@ -228,7 +228,11 @@ class MultiAgentEnv(gym.Env):
             self.render_geoms = []
             self.render_geoms_xform = []
             for entity in self.world.entities:
-                geom = rendering.make_circle(entity.size)
+                if 'polygon' in entity.name:
+                    geom = rendering.make_polygon(entity.state.points)
+                else:
+                    geom = rendering.make_circle(entity.size)
+                # geom = rendering.make_circle(entity.size)
                 xform = rendering.Transform()
                 if 'agent' in entity.name:
                     geom.set_color(*entity.color, alpha=0.5)
@@ -256,7 +260,8 @@ class MultiAgentEnv(gym.Env):
             self.viewers[i].set_bounds(pos[0]-cam_range,pos[0]+cam_range,pos[1]-cam_range,pos[1]+cam_range)
             # update geometry positions
             for e, entity in enumerate(self.world.entities):
-                self.render_geoms_xform[e].set_translation(*entity.state.p_pos)
+                if 'polygon' not in entity.name:
+                    self.render_geoms_xform[e].set_translation(*entity.state.p_pos)
             # render to display or array
             results.append(self.viewers[i].render(return_rgb_array = mode=='rgb_array'))
 
