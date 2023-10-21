@@ -27,7 +27,7 @@ class Scenario(BaseScenario):
             landmark.name = 'landmark_polygon %d' % i
             landmark.collide = False
             landmark.movable = False
-            landmark.size = 0.08
+            landmark.size = 0.2
         # make initial conditions
         self.reset_world(world)
         return world
@@ -56,7 +56,7 @@ class Scenario(BaseScenario):
             landmark_leftTop=[landmark.state.p_pos[0]-landmark.size/2,landmark.state.p_pos[1]-landmark.size/2]
             landmark_rightTop=[landmark.state.p_pos[0]+landmark.size/2,landmark.state.p_pos[1]-landmark.size/2]
             landmark_rightBottom = [landmark.state.p_pos[0] + landmark.size / 2,landmark.state.p_pos[1] + landmark.size / 2]
-            landmark_leftBottom = [landmark.state.p_pos[0] - landmark.size / 2,landmark.state.p_pos[1] - landmark.size / 2]
+            landmark_leftBottom = [landmark.state.p_pos[0] - landmark.size / 2,landmark.state.p_pos[1] + landmark.size / 2]
             landmark.state.points.append(landmark_leftTop)
             landmark.state.points.append(landmark_rightTop)
             landmark.state.points.append(landmark_rightBottom)
