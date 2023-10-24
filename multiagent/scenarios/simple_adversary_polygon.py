@@ -25,7 +25,7 @@ class Scenario(BaseScenario):
         world.agents = [Agent() for i in range(num_agents)]
         for i, agent in enumerate(world.agents):
             agent.name = 'agent %d' % i
-            agent.collide = False
+            agent.collide = True
             agent.silent = True
             agent.adversary = True if i < num_adversaries else False
             agent.size = 0.02
@@ -36,7 +36,7 @@ class Scenario(BaseScenario):
             landmark.name = 'landmark_polygon %d' % i
             landmark.collide = False
             landmark.movable = False
-            landmark.size = 0.2
+            landmark.size = 0.15
             landmark.state.p_pos=[landmarks[i]['centerX'],landmarks[i]['centerY']]
             landmark.state.points=[]
             landmark_leftTop=[landmark.state.p_pos[0]-landmark.size/2,landmark.state.p_pos[1]-landmark.size/2]
@@ -66,7 +66,10 @@ class Scenario(BaseScenario):
             agent.goal_a = goal
         # set random initial states
         for agent in world.agents:
-            agent.state.p_pos = np.random.uniform(-1, +1, world.dim_p)
+            if agent.adversary:
+                agent.state.p_pos = np.random.uniform(-1, +1, world.dim_p)
+            else:
+                agent.state.p_pos = np.array([np.random.uniform(-1, +1),np.random.uniform(-0.15,0.15)])
             agent.state.p_vel = np.zeros(world.dim_p)
             agent.state.c = np.zeros(world.dim_c)
 
@@ -86,6 +89,12 @@ class Scenario(BaseScenario):
             dists.append(np.sum(np.square(agent.state.p_pos - agent.goal_a.state.p_pos)))
             return tuple(dists)
 
+    # 判断是否发生碰撞
+    def is_collision(self, agent1, agent2):
+        delta_pos = agent1.state.p_pos - agent2.state.p_pos
+        dist = np.sqrt(np.sum(np.square(delta_pos)))
+        dist_min = agent1.size + agent2.size
+        return True if dist < dist_min else False
     # return all agents that are not adversaries
     def good_agents(self, world):
         return [agent for agent in world.agents if not agent.adversary]
@@ -93,7 +102,8 @@ class Scenario(BaseScenario):
     # return all adversarial agents
     def adversaries(self, world):
         return [agent for agent in world.agents if agent.adversary]
-
+    def get_landmarks(self,world):
+        return [landmark for landmark in world.landmarks]
     def reward(self, agent, world):
         # Agents are rewarded based on minimum agent distance to each landmark
         return self.adversary_reward(agent, world) if agent.adversary else self.agent_reward(agent, world)
@@ -127,8 +137,15 @@ class Scenario(BaseScenario):
                 [np.sqrt(np.sum(np.square(a.state.p_pos - a.goal_a.state.p_pos))) for a in good_agents])
 
         # caculate collide reward
-
-        return pos_rew + adv_rew
+        col_rew=0
+        if agent.collide:
+            for a in adversary_agents:
+                if self.is_collision(a, agent):
+                    col_rew -= 1
+            for l in self.get_landmarks(world):
+                if(l.state.p_pos!=a.goal_a.state.p_pos and self.is_collision(a,l)):
+                    col_rew-= 1
+        return pos_rew + adv_rew+col_rew
 
     def adversary_reward(self, agent, world):
         # Rewarded based on proximity to the goal landmark
