@@ -1,12 +1,148 @@
 {
-    "rectangles": [
+    "landmarks": [
+        {
+            "centerX": -0.8,
+            "centerY": -0.8
+        },
+              {
+            "centerX": -0.8,
+            "centerY": -0.5
+        },
+              {
+            "centerX": -0.8,
+            "centerY": -0.2
+        },
         {
             "centerX": -0.5,
             "centerY": -0.5
         },
+              {
+            "centerX": -0.5,
+            "centerY": -0.8
+        },
+              {
+            "centerX": -0.5,
+            "centerY": -0.2
+        },
         {
-          "centerX": 0.5,
+            "centerX": -0.2,
+            "centerY": -0.2
+        },
+              {
+            "centerX": -0.2,
+            "centerY": -0.8
+        },
+              {
+            "centerX": -0.2,
+            "centerY": -0.5
+        },
+      {
+            "centerX": 0.2,
+            "centerY": -0.2
+        },
+              {
+            "centerX": 0.2,
+            "centerY": -0.8
+        },
+              {
+            "centerX": 0.2,
+            "centerY": -0.5
+        },
+      {
+            "centerX": 0.5,
+            "centerY": -0.5
+        },
+              {
+            "centerX": 0.5,
+            "centerY": -0.8
+        },
+              {
+            "centerX": 0.5,
+            "centerY": -0.2
+        },
+              {
+            "centerX": 0.8,
+            "centerY": -0.8
+        },
+              {
+            "centerX": 0.8,
+            "centerY": -0.5
+        },
+              {
+            "centerX": 0.8,
+            "centerY": -0.2
+        },
+      {
+            "centerX": 0.2,
+            "centerY": 0.2
+        },
+              {
+            "centerX": 0.2,
+            "centerY": 0.8
+        },
+              {
+            "centerX": 0.2,
             "centerY": 0.5
+        },
+          {
+            "centerX": 0.5,
+            "centerY": 0.5
+        },
+              {
+            "centerX": 0.5,
+            "centerY": 0.8
+        },
+              {
+            "centerX": 0.5,
+            "centerY": 0.2
+        },
+        {
+            "centerX": 0.8,
+            "centerY": 0.8
+        },
+              {
+            "centerX": 0.8,
+            "centerY": 0.5
+        },
+              {
+            "centerX": 0.8,
+            "centerY": 0.2
+        },
+              {
+            "centerX": -0.5,
+            "centerY": 0.5
+        },
+              {
+            "centerX": -0.5,
+            "centerY": 0.8
+        },
+              {
+            "centerX": -0.5,
+            "centerY": 0.2
+        },
+        {
+            "centerX": -0.2,
+            "centerY": 0.2
+        },
+              {
+            "centerX": -0.2,
+            "centerY": 0.8
+        },
+              {
+            "centerX": -0.2,
+            "centerY": 0.5
+        },
+      {
+                    "centerX": -0.8,
+            "centerY": 0.8
+      },
+              {
+            "centerX": -0.8,
+            "centerY": 0.5
+        },
+              {
+            "centerX": -0.8,
+            "centerY": 0.2
         }
     ]
 }

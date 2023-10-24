@@ -7,12 +7,20 @@ class Scenario(BaseScenario):
 
     def make_world(self):
         world = World()
+        import json
+
+        # 读取配置文件
+        with open("D:\\hanlinfeng\\workspace\\multiagent-particle-envs\\multiagent\\scenarios\\config\\adversary_polygon.json", "r") as config_file:
+            config_data = json.load(config_file)
+
+        # 获取长方体列表
+        landmarks = config_data["landmarks"]
         # set any world properties first
         world.dim_c = 2
         num_agents = 3
         world.num_agents = num_agents
         num_adversaries = 1
-        num_landmarks = num_agents - 1
+        num_landmarks = len(landmarks)
         # add agents
         world.agents = [Agent() for i in range(num_agents)]
         for i, agent in enumerate(world.agents):
@@ -20,7 +28,8 @@ class Scenario(BaseScenario):
             agent.collide = False
             agent.silent = True
             agent.adversary = True if i < num_adversaries else False
-            agent.size = 0.15
+            agent.size = 0.02
+            agent.max_speed=0.5
         # add landmarks
         world.landmarks = [Landmark() for i in range(num_landmarks)]
         for i, landmark in enumerate(world.landmarks):
@@ -28,6 +37,16 @@ class Scenario(BaseScenario):
             landmark.collide = False
             landmark.movable = False
             landmark.size = 0.2
+            landmark.state.p_pos=[landmarks[i]['centerX'],landmarks[i]['centerY']]
+            landmark.state.points=[]
+            landmark_leftTop=[landmark.state.p_pos[0]-landmark.size/2,landmark.state.p_pos[1]-landmark.size/2]
+            landmark_rightTop=[landmark.state.p_pos[0]+landmark.size/2,landmark.state.p_pos[1]-landmark.size/2]
+            landmark_rightBottom = [landmark.state.p_pos[0] + landmark.size / 2,landmark.state.p_pos[1] + landmark.size / 2]
+            landmark_leftBottom = [landmark.state.p_pos[0] - landmark.size / 2,landmark.state.p_pos[1] + landmark.size / 2]
+            landmark.state.points.append(landmark_leftTop)
+            landmark.state.points.append(landmark_rightTop)
+            landmark.state.points.append(landmark_rightBottom)
+            landmark.state.points.append(landmark_leftBottom)
         # make initial conditions
         self.reset_world(world)
         return world
@@ -50,26 +69,10 @@ class Scenario(BaseScenario):
             agent.state.p_pos = np.random.uniform(-1, +1, world.dim_p)
             agent.state.p_vel = np.zeros(world.dim_p)
             agent.state.c = np.zeros(world.dim_c)
-        import json
 
-        # 读取配置文件
-        with open("D:\\hanlinfeng\\workspace\\multiagent-particle-envs\\multiagent\\scenarios\\config\\adversary_polygon.json", "r") as config_file:
-            config_data = json.load(config_file)
-
-        # 获取长方体列表
-        rectangles = config_data["rectangles"]
         for i, landmark in enumerate(world.landmarks):
             # landmark.state.p_pos = np.random.uniform(-1, +1, world.dim_p)
-            landmark.state.p_pos=[rectangles[i]['centerX'],rectangles[i]['centerY']]
-            landmark.state.points=[]
-            landmark_leftTop=[landmark.state.p_pos[0]-landmark.size/2,landmark.state.p_pos[1]-landmark.size/2]
-            landmark_rightTop=[landmark.state.p_pos[0]+landmark.size/2,landmark.state.p_pos[1]-landmark.size/2]
-            landmark_rightBottom = [landmark.state.p_pos[0] + landmark.size / 2,landmark.state.p_pos[1] + landmark.size / 2]
-            landmark_leftBottom = [landmark.state.p_pos[0] - landmark.size / 2,landmark.state.p_pos[1] + landmark.size / 2]
-            landmark.state.points.append(landmark_leftTop)
-            landmark.state.points.append(landmark_rightTop)
-            landmark.state.points.append(landmark_rightBottom)
-            landmark.state.points.append(landmark_leftBottom)
+
             landmark.state.p_vel = np.zeros(world.dim_p)
 
     def benchmark_data(self, agent, world):
@@ -122,6 +125,9 @@ class Scenario(BaseScenario):
                 pos_rew += 5
             pos_rew -= min(
                 [np.sqrt(np.sum(np.square(a.state.p_pos - a.goal_a.state.p_pos))) for a in good_agents])
+
+        # caculate collide reward
+
         return pos_rew + adv_rew
 
     def adversary_reward(self, agent, world):
